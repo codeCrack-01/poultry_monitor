@@ -1,0 +1,215 @@
+<!-- BEGIN app/views/layouts/application.html.erb
+--><!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Poultry Monitor</title><base href="/poultry_monitor/">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Poultry Monitor">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="K4dGC_TT3w-R5UkU8LYH04MS-SB9Fw0BwzGQjzJRKE_S29-shgfh5YlH8xpb3pCddBVyE6PiuMhevocClEDf8Q" />
+    
+    
+    <link rel="stylesheet" href="assets/application-8b441ae0.css" data-turbo-track="reload" />
+<link rel="stylesheet" href="assets/tailwind-e85dbf90.css" data-turbo-track="reload" />
+    <script type="importmap" data-turbo-track="reload">{
+  "imports": {
+    "application": "assets/application-bfcdf840.js",
+    "@hotwired/turbo-rails": "assets/turbo.min-9fd88cd5.js",
+    "@hotwired/stimulus": "assets/stimulus.min-4b1e420e.js",
+    "@hotwired/stimulus-loading": "assets/stimulus-loading-1fc53fe7.js",
+    "controllers/application": "assets/controllers/application-3affb389.js",
+    "controllers/hello_controller": "assets/controllers/hello_controller-708796bd.js",
+    "controllers": "assets/controllers/index-ee64e1f1.js"
+  }
+}</script>
+<link rel="modulepreload" href="assets/application-bfcdf840.js">
+<link rel="modulepreload" href="assets/turbo.min-9fd88cd5.js">
+<link rel="modulepreload" href="assets/stimulus.min-4b1e420e.js">
+<link rel="modulepreload" href="assets/stimulus-loading-1fc53fe7.js">
+<link rel="modulepreload" href="assets/controllers/application-3affb389.js">
+<link rel="modulepreload" href="assets/controllers/hello_controller-708796bd.js">
+<link rel="modulepreload" href="assets/controllers/index-ee64e1f1.js">
+<script type="module">import "application"</script>
+  </head>
+
+  <body class="font-sans antialiased bg-gray-100 text-gray-900 min-h-screen">
+    <div class="min-h-screen md:max-w-[430px] md:mx-auto md:border-x md:border-gray-200 bg-white relative">
+      <!-- BEGIN app/views/farms/index.html.erb
+--><div class="sticky top-0 z-50 bg-white/96 backdrop-blur-md border-b border-gray-200 px-4 py-2.5 flex items-center justify-between">
+  <div class="text-base font-semibold">My Farms</div>
+  <div>
+    <a class="relative w-9 h-9 rounded-md border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-gray-50" href="alerts">
+      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" /></svg>
+        <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500 border-2 border-white"></span>
+</a>  </div>
+</div>
+
+<div class="flex items-center gap-2.5 px-4 py-2.5 bg-white border-b border-gray-200">
+    <div class="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_0_0_rgba(199,84,80,0.4)] animate-pulse"></div>
+    <span class="text-sm font-medium text-red-500">2 farms needs attention</span>
+  <span class="ml-auto text-[11px] text-gray-400">Updated just now</span>
+</div>
+
+<div class="px-4 pt-3 pb-24 space-y-2.5">
+    <a class="block bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md active:scale-[0.995] transition-all no-underline text-gray-900" href="farms/22">
+      <div class="px-4 py-3.5 border-b border-gray-200 flex items-center justify-between bg-red-50 border-red-200  ">
+        <span class="text-sm font-semibold">Green Valley Farm</span>
+        <span class="text-[11px] font-semibold uppercase tracking-wide px-2.5 py-0.5 rounded-full border bg-red-50 text-red-600 border-red-200  ">
+          Critical
+        </span>
+      </div>
+
+      <div class="px-4 py-3">
+          <div class="text-sm font-semibold mb-2 flex items-center gap-1.5 text-red-600 ">
+              <span class="text-red-600"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0zm-9 3.75h.008v.008H12v-.008z" /></svg></span>
+            3 Critical Alerts, 1 Warning
+          </div>
+          <div class="flex flex-wrap gap-1.5 mb-2">
+              <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full border bg-red-50 text-red-600 border-red-200">
+                <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" /></svg>
+                
+                
+                
+                High ammonia · C
+              </span>
+              <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full border bg-red-50 text-red-600 border-red-200">
+                
+                <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" /></svg>
+                
+                
+                High temperature · C
+              </span>
+              <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full border bg-red-50 text-red-600 border-red-200">
+                
+                
+                <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12V3m0 0l2.5 2.5M12 3L9.5 5.5M12 12l5.5 5.5M12 12l-5.5 5.5M12 12h9m0 0l-2.5-2.5M21 12l-2.5 2.5M12 12H3m0 0l2.5 2.5M3 12l2.5-2.5" /></svg>
+                
+                Fan offline · C
+              </span>
+              <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full border bg-yellow-50 text-yellow-700 border-yellow-200">
+                
+                
+                
+                <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" /></svg>
+                High humidity · C
+              </span>
+          </div>
+
+        <div class="flex gap-4 pt-3 mt-1 border-t border-gray-200">
+            <div class="flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" /></svg>
+              <span class="text-xs font-semibold text-gray-500">8.0 ppm</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" /></svg>
+              <span class="text-xs font-semibold text-gray-500">25.0°C</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12V3m0 0l2.5 2.5M12 3L9.5 5.5M12 12l5.5 5.5M12 12l-5.5 5.5M12 12h9m0 0l-2.5-2.5M21 12l-2.5 2.5M12 12H3m0 0l2.5 2.5M3 12l2.5-2.5" /></svg>
+              <span class="text-xs font-semibold text-gray-500">8/9</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" /></svg>
+              <span class="text-xs font-semibold text-gray-500">54.0%</span>
+            </div>
+        </div>
+      </div>
+</a>    <a class="block bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md active:scale-[0.995] transition-all no-underline text-gray-900" href="farms/24">
+      <div class="px-4 py-3.5 border-b border-gray-200 flex items-center justify-between  bg-yellow-50 border-yellow-200 ">
+        <span class="text-sm font-semibold">Hillside Coop</span>
+        <span class="text-[11px] font-semibold uppercase tracking-wide px-2.5 py-0.5 rounded-full border  bg-yellow-50 text-yellow-700 border-yellow-200 ">
+          Warning
+        </span>
+      </div>
+
+      <div class="px-4 py-3">
+          <div class="text-sm font-semibold mb-2 flex items-center gap-1.5  text-yellow-700">
+              <span class="text-yellow-700"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg></span>
+            0 Critical Alerts, 1 Warning
+          </div>
+          <div class="flex flex-wrap gap-1.5 mb-2">
+              <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full border bg-yellow-50 text-yellow-700 border-yellow-200">
+                
+                <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" /></svg>
+                
+                
+                Rising temperature · B
+              </span>
+          </div>
+
+        <div class="flex gap-4 pt-3 mt-1 border-t border-gray-200">
+            <div class="flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" /></svg>
+              <span class="text-xs font-semibold text-gray-500">10.0 ppm</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" /></svg>
+              <span class="text-xs font-semibold text-gray-500">26.0°C</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12V3m0 0l2.5 2.5M12 3L9.5 5.5M12 12l5.5 5.5M12 12l-5.5 5.5M12 12h9m0 0l-2.5-2.5M21 12l-2.5 2.5M12 12H3m0 0l2.5 2.5M3 12l2.5-2.5" /></svg>
+              <span class="text-xs font-semibold text-gray-500">9/9</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" /></svg>
+              <span class="text-xs font-semibold text-gray-500">55.0%</span>
+            </div>
+        </div>
+      </div>
+</a>    <a class="block bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md active:scale-[0.995] transition-all no-underline text-gray-900" href="farms/23">
+      <div class="px-4 py-3.5 border-b border-gray-200 flex items-center justify-between   bg-green-50 border-green-200">
+        <span class="text-sm font-semibold">Sunrise Poultry</span>
+        <span class="text-[11px] font-semibold uppercase tracking-wide px-2.5 py-0.5 rounded-full border   bg-green-50 text-green-700 border-green-200">
+          Normal
+        </span>
+      </div>
+
+      <div class="px-4 py-3">
+          <div class="text-sm font-semibold mb-2 text-green-600 flex items-center gap-1.5">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.75l6 6 9-13.5" /></svg> All systems normal
+          </div>
+
+        <div class="flex gap-4 pt-3 mt-1 border-t border-gray-200">
+            <div class="flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" /></svg>
+              <span class="text-xs font-semibold text-gray-500">8.0 ppm</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" /></svg>
+              <span class="text-xs font-semibold text-gray-500">24.5°C</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12V3m0 0l2.5 2.5M12 3L9.5 5.5M12 12l5.5 5.5M12 12l-5.5 5.5M12 12h9m0 0l-2.5-2.5M21 12l-2.5 2.5M12 12H3m0 0l2.5 2.5M3 12l2.5-2.5" /></svg>
+              <span class="text-xs font-semibold text-gray-500">9/9</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" /></svg>
+              <span class="text-xs font-semibold text-gray-500">55.0%</span>
+            </div>
+        </div>
+      </div>
+</a></div>
+<!-- END app/views/farms/index.html.erb -->
+
+      <!-- BEGIN app/views/shared/_bottom_nav.html.erb
+--><div class="fixed bottom-0 left-0 right-0 md:max-w-[430px] md:mx-auto bg-white/96 backdrop-blur-md border-t border-gray-200 flex justify-around px-2 py-1 pb-4 z-100">
+  <a class="flex flex-col items-center gap-0.5 px-4 py-1.5 text-blue-600  transition-colors" href="farms">
+    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.25 12l8.954-8.955a1.126 1.126 0 0 1 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /></svg>
+    <span class="text-[10px] font-medium">Farms</span>
+</a>
+  <a class="flex flex-col items-center gap-0.5 px-4 py-1.5  text-gray-400 transition-colors" href="alerts">
+    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" /></svg>
+    <span class="text-[10px] font-medium">Alerts</span>
+</a>
+  <div class="flex flex-col items-center gap-0.5 px-4 py-1.5 text-gray-400 cursor-default">
+    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" /></svg>
+    <span class="text-[10px] font-medium">Settings</span>
+  </div>
+</div>
+<!-- END app/views/shared/_bottom_nav.html.erb -->
+    </div>
+  </body>
+</html>
+<!-- END app/views/layouts/application.html.erb -->

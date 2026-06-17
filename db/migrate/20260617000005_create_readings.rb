@@ -9,6 +9,6 @@ class CreateReadings < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :readings, [:sensor_id, :recorded_at]
+    add_index :readings, [ :sensor_id, :recorded_at ]
   end
 end

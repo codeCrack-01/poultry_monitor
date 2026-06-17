@@ -16,6 +16,6 @@ class CreateAlerts < ActiveRecord::Migration[8.0]
 
     add_index :alerts, :severity
     add_index :alerts, :status
-    add_index :alerts, [:farm_id, :status]
+    add_index :alerts, [ :farm_id, :status ]
   end
 end

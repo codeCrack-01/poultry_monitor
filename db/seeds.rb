@@ -45,7 +45,7 @@ ActiveRecord::Base.transaction do
 
   # ── Helper to build a zone with sensors + readings ──────────────────
   zone_names = %w[A B C D]
-  fan_labels = { "A" => ["Fan 1", "Fan 2"], "B" => ["Fan 1", "Fan 2"], "C" => ["Fan 1", "Fan 2", "Fan 3"], "D" => ["Fan 1", "Fan 2"] }
+  fan_labels = { "A" => [ "Fan 1", "Fan 2" ], "B" => [ "Fan 1", "Fan 2" ], "C" => [ "Fan 1", "Fan 2", "Fan 3" ], "D" => [ "Fan 1", "Fan 2" ] }
 
   build_zone = lambda do |shed, zone_name, status, readings_hash, offline_fans: []|
     zone = shed.zones.create!(name: zone_name, status: status)
@@ -80,80 +80,80 @@ ActiveRecord::Base.transaction do
   # ── Green Valley Farm Zones (matching demo) ─────────────────────────
   # Zone A: normal, 25°C, 54%
   build_zone.call(gv_shed, "A", :normal, {
-    temp:  [[25.0, now - 2.minutes], [24.8, now - 15.minutes], [25.2, now - 30.minutes]],
-    humid: [[54, now - 2.minutes], [55, now - 15.minutes], [54, now - 30.minutes]],
-    ammo:  [[8, now - 2.minutes], [7, now - 15.minutes], [8, now - 30.minutes]]
+    temp:  [ [ 25.0, now - 2.minutes ], [ 24.8, now - 15.minutes ], [ 25.2, now - 30.minutes ] ],
+    humid: [ [ 54, now - 2.minutes ], [ 55, now - 15.minutes ], [ 54, now - 30.minutes ] ],
+    ammo:  [ [ 8, now - 2.minutes ], [ 7, now - 15.minutes ], [ 8, now - 30.minutes ] ]
   })
 
   # Zone B: warning, 30°C, 19 ppm
   build_zone.call(gv_shed, "B", :warning, {
-    temp:  [[30.0, now - 2.minutes], [28.5, now - 15.minutes], [27.0, now - 30.minutes]],
-    humid: [[62, now - 2.minutes], [60, now - 15.minutes], [58, now - 30.minutes]],
-    ammo:  [[19, now - 2.minutes], [17, now - 15.minutes], [15, now - 30.minutes]]
+    temp:  [ [ 30.0, now - 2.minutes ], [ 28.5, now - 15.minutes ], [ 27.0, now - 30.minutes ] ],
+    humid: [ [ 62, now - 2.minutes ], [ 60, now - 15.minutes ], [ 58, now - 30.minutes ] ],
+    ammo:  [ [ 19, now - 2.minutes ], [ 17, now - 15.minutes ], [ 15, now - 30.minutes ] ]
   })
 
   # Zone C: critical, 34°C, 28 ppm, Fan 3 offline
   build_zone.call(gv_shed, "C", :critical, {
-    temp:  [[34.2, now - 2.minutes], [33.0, now - 15.minutes], [31.5, now - 30.minutes]],
-    humid: [[68, now - 2.minutes], [66, now - 15.minutes], [64, now - 30.minutes]],
-    ammo:  [[28, now - 2.minutes], [26, now - 15.minutes], [24, now - 30.minutes]]
-  }, offline_fans: ["Fan 3"])
+    temp:  [ [ 34.2, now - 2.minutes ], [ 33.0, now - 15.minutes ], [ 31.5, now - 30.minutes ] ],
+    humid: [ [ 68, now - 2.minutes ], [ 66, now - 15.minutes ], [ 64, now - 30.minutes ] ],
+    ammo:  [ [ 28, now - 2.minutes ], [ 26, now - 15.minutes ], [ 24, now - 30.minutes ] ]
+  }, offline_fans: [ "Fan 3" ])
 
   # Zone D: normal, 24°C, 52%
   build_zone.call(gv_shed, "D", :normal, {
-    temp:  [[24.0, now - 2.minutes], [24.5, now - 15.minutes], [23.8, now - 30.minutes]],
-    humid: [[52, now - 2.minutes], [53, now - 15.minutes], [51, now - 30.minutes]],
-    ammo:  [[6, now - 2.minutes], [5, now - 15.minutes], [6, now - 30.minutes]]
+    temp:  [ [ 24.0, now - 2.minutes ], [ 24.5, now - 15.minutes ], [ 23.8, now - 30.minutes ] ],
+    humid: [ [ 52, now - 2.minutes ], [ 53, now - 15.minutes ], [ 51, now - 30.minutes ] ],
+    ammo:  [ [ 6, now - 2.minutes ], [ 5, now - 15.minutes ], [ 6, now - 30.minutes ] ]
   })
 
   # ── Sunrise Poultry Zones (all normal) ──────────────────────────────
   build_zone.call(sr_shed, "A", :normal, {
-    temp:  [[24.5, now - 2.minutes], [24.0, now - 15.minutes], [23.5, now - 30.minutes]],
-    humid: [[55, now - 2.minutes], [54, now - 15.minutes], [53, now - 30.minutes]],
-    ammo:  [[8, now - 2.minutes], [7, now - 15.minutes], [6, now - 30.minutes]]
+    temp:  [ [ 24.5, now - 2.minutes ], [ 24.0, now - 15.minutes ], [ 23.5, now - 30.minutes ] ],
+    humid: [ [ 55, now - 2.minutes ], [ 54, now - 15.minutes ], [ 53, now - 30.minutes ] ],
+    ammo:  [ [ 8, now - 2.minutes ], [ 7, now - 15.minutes ], [ 6, now - 30.minutes ] ]
   })
 
   build_zone.call(sr_shed, "B", :normal, {
-    temp:  [[23.8, now - 2.minutes], [24.2, now - 15.minutes], [23.0, now - 30.minutes]],
-    humid: [[53, now - 2.minutes], [54, now - 15.minutes], [52, now - 30.minutes]],
-    ammo:  [[7, now - 2.minutes], [6, now - 15.minutes], [7, now - 30.minutes]]
+    temp:  [ [ 23.8, now - 2.minutes ], [ 24.2, now - 15.minutes ], [ 23.0, now - 30.minutes ] ],
+    humid: [ [ 53, now - 2.minutes ], [ 54, now - 15.minutes ], [ 52, now - 30.minutes ] ],
+    ammo:  [ [ 7, now - 2.minutes ], [ 6, now - 15.minutes ], [ 7, now - 30.minutes ] ]
   })
 
   build_zone.call(sr_shed, "C", :normal, {
-    temp:  [[24.2, now - 2.minutes], [24.8, now - 15.minutes], [24.0, now - 30.minutes]],
-    humid: [[56, now - 2.minutes], [55, now - 15.minutes], [54, now - 30.minutes]],
-    ammo:  [[6, now - 2.minutes], [5, now - 15.minutes], [6, now - 30.minutes]]
+    temp:  [ [ 24.2, now - 2.minutes ], [ 24.8, now - 15.minutes ], [ 24.0, now - 30.minutes ] ],
+    humid: [ [ 56, now - 2.minutes ], [ 55, now - 15.minutes ], [ 54, now - 30.minutes ] ],
+    ammo:  [ [ 6, now - 2.minutes ], [ 5, now - 15.minutes ], [ 6, now - 30.minutes ] ]
   })
 
   build_zone.call(sr_shed, "D", :normal, {
-    temp:  [[23.5, now - 2.minutes], [23.0, now - 15.minutes], [23.8, now - 30.minutes]],
-    humid: [[52, now - 2.minutes], [51, now - 15.minutes], [53, now - 30.minutes]],
-    ammo:  [[5, now - 2.minutes], [6, now - 15.minutes], [5, now - 30.minutes]]
+    temp:  [ [ 23.5, now - 2.minutes ], [ 23.0, now - 15.minutes ], [ 23.8, now - 30.minutes ] ],
+    humid: [ [ 52, now - 2.minutes ], [ 51, now - 15.minutes ], [ 53, now - 30.minutes ] ],
+    ammo:  [ [ 5, now - 2.minutes ], [ 6, now - 15.minutes ], [ 5, now - 30.minutes ] ]
   })
 
   # ── Hillside Coop Zones (some warning, some normal) ─────────────────
   build_zone.call(hs_shed, "A", :normal, {
-    temp:  [[26.0, now - 2.minutes], [25.5, now - 15.minutes], [25.0, now - 30.minutes]],
-    humid: [[55, now - 2.minutes], [54, now - 15.minutes], [53, now - 30.minutes]],
-    ammo:  [[10, now - 2.minutes], [9, now - 15.minutes], [8, now - 30.minutes]]
+    temp:  [ [ 26.0, now - 2.minutes ], [ 25.5, now - 15.minutes ], [ 25.0, now - 30.minutes ] ],
+    humid: [ [ 55, now - 2.minutes ], [ 54, now - 15.minutes ], [ 53, now - 30.minutes ] ],
+    ammo:  [ [ 10, now - 2.minutes ], [ 9, now - 15.minutes ], [ 8, now - 30.minutes ] ]
   })
 
   build_zone.call(hs_shed, "B", :warning, {
-    temp:  [[29.8, now - 2.minutes], [28.0, now - 15.minutes], [27.0, now - 30.minutes]],
-    humid: [[58, now - 2.minutes], [56, now - 15.minutes], [55, now - 30.minutes]],
-    ammo:  [[18, now - 2.minutes], [16, now - 15.minutes], [14, now - 30.minutes]]
+    temp:  [ [ 29.8, now - 2.minutes ], [ 28.0, now - 15.minutes ], [ 27.0, now - 30.minutes ] ],
+    humid: [ [ 58, now - 2.minutes ], [ 56, now - 15.minutes ], [ 55, now - 30.minutes ] ],
+    ammo:  [ [ 18, now - 2.minutes ], [ 16, now - 15.minutes ], [ 14, now - 30.minutes ] ]
   })
 
   build_zone.call(hs_shed, "C", :normal, {
-    temp:  [[25.0, now - 2.minutes], [24.5, now - 15.minutes], [25.5, now - 30.minutes]],
-    humid: [[54, now - 2.minutes], [53, now - 15.minutes], [55, now - 30.minutes]],
-    ammo:  [[9, now - 2.minutes], [8, now - 15.minutes], [9, now - 30.minutes]]
+    temp:  [ [ 25.0, now - 2.minutes ], [ 24.5, now - 15.minutes ], [ 25.5, now - 30.minutes ] ],
+    humid: [ [ 54, now - 2.minutes ], [ 53, now - 15.minutes ], [ 55, now - 30.minutes ] ],
+    ammo:  [ [ 9, now - 2.minutes ], [ 8, now - 15.minutes ], [ 9, now - 30.minutes ] ]
   })
 
   build_zone.call(hs_shed, "D", :normal, {
-    temp:  [[24.8, now - 2.minutes], [24.0, now - 15.minutes], [25.2, now - 30.minutes]],
-    humid: [[53, now - 2.minutes], [52, now - 15.minutes], [54, now - 30.minutes]],
-    ammo:  [[7, now - 2.minutes], [8, now - 15.minutes], [7, now - 30.minutes]]
+    temp:  [ [ 24.8, now - 2.minutes ], [ 24.0, now - 15.minutes ], [ 25.2, now - 30.minutes ] ],
+    humid: [ [ 53, now - 2.minutes ], [ 52, now - 15.minutes ], [ 54, now - 30.minutes ] ],
+    ammo:  [ [ 7, now - 2.minutes ], [ 8, now - 15.minutes ], [ 7, now - 30.minutes ] ]
   })
 
   # ── Generator for Green Valley ──────────────────────────────────────
