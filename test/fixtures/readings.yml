@@ -1,0 +1,15 @@
+gv_temp_reading:
+  sensor: gv_temp
+  value: 34.2
+  unit: "°C"
+  recorded_at: <%= 5.minutes.ago %>
+  created_at: <%= 5.minutes.ago %>
+  updated_at: <%= 5.minutes.ago %>
+
+gv_ammonia_reading:
+  sensor: gv_ammonia
+  value: 28.0
+  unit: ppm
+  recorded_at: <%= 5.minutes.ago %>
+  created_at: <%= 5.minutes.ago %>
+  updated_at: <%= 5.minutes.ago %>

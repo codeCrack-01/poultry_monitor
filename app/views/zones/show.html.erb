@@ -1,0 +1,132 @@
+<div class="sticky top-0 z-50 bg-white/96 backdrop-blur-md border-b border-gray-200 px-4 py-2.5 flex items-center justify-between">
+  <div class="flex items-center gap-2.5">
+    <%= link_to farm_path(@zone.farm), class: "w-8 h-8 rounded-md border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-gray-50 no-underline" do %>
+      <%= icon :chevron_left, class: "w-4 h-4" %>
+    <% end %>
+    <div>
+      <div class="text-sm font-semibold">Zone <%= @zone.name %></div>
+      <div class="text-[11px] text-gray-400"><%= @zone.farm.name %> · <%= @zone.shed.name %></div>
+    </div>
+  </div>
+  <div>
+    <%= link_to alerts_path, class: "relative w-9 h-9 rounded-md border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-gray-50" do %>
+      <%= icon :bell, class: "w-4 h-4" %>
+      <% if @alerts.any? { |a| a.active? } %>
+        <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500 border-2 border-white"></span>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<% zone_status = @zone.critical? ? 'critical' : (@zone.warning? ? 'warning' : 'normal') %>
+<% status_color = { 'critical' => 'red', 'warning' => 'yellow', 'normal' => 'green' }[zone_status] %>
+<% status_label = { 'critical' => 'Needs Immediate Attention', 'warning' => 'Needs Attention', 'normal' => 'All Good' }[zone_status] %>
+<div class="flex items-center gap-2.5 px-4 py-2.5 bg-white border-b border-gray-200">
+  <div class="w-2 h-2 rounded-full bg-<%= status_color %>-500 animate-pulse"></div>
+  <span class="text-sm font-medium text-<%= status_color %>-500"><%= @zone.alerts.active.count %> issue<%= 's' unless @zone.alerts.active.count == 1 %></span>
+  <span class="ml-auto text-[11px] text-gray-400">Updated just now</span>
+</div>
+
+<div class="px-4 pt-3 pb-24">
+  <div class="rounded-lg p-4 mb-3.5 text-center <%= 'bg-red-50 border border-red-200' if @zone.critical? %> <%= 'bg-yellow-50 border border-yellow-200' if @zone.warning? %> <%= 'bg-green-50 border border-green-200' if @zone.normal? %>">
+    <div class="text-lg font-bold text-gray-900 mb-1.5">Zone <%= @zone.name %></div>
+    <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border <%= 'bg-green-50 text-green-700 border-green-200' if @zone.normal? %> <%= 'bg-yellow-50 text-yellow-700 border-yellow-200' if @zone.warning? %> <%= 'bg-red-50 text-red-600 border-red-200' if @zone.critical? %>">
+      <%= icon :exclamation_triangle, class: "w-3 h-3" if @zone.warning? || @zone.critical? %>
+      <%= icon :check, class: "w-3 h-3" if @zone.normal? %>
+      <%= status_label %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-2 gap-2.5 mb-3.5">
+    <% ammonia_sensors = @zone.sensors.select(&:ammonia?) %>
+    <% temp_sensors = @zone.sensors.select(&:temperature?) %>
+    <% fan_sensors = @zone.sensors.select(&:fan?) %>
+    <% humidity_sensors = @zone.sensors.select(&:humidity?) %>
+
+    <% [ammonia_sensors, temp_sensors, fan_sensors, humidity_sensors].flatten.each do |sensor| %>
+      <% latest = sensor.latest_reading %>
+      <% next unless latest %>
+      <% threshold = Threshold.find_by(sensor_type: sensor.sensor_type) if sensor.temperature? || sensor.humidity? || sensor.ammonia? %>
+      <% level = 'normal' %>
+      <% if threshold %>
+        <% if (threshold.critical_min && latest.value < threshold.critical_min) || (threshold.critical_max && latest.value > threshold.critical_max) %>
+          <% level = 'critical' %>
+        <% elsif (threshold.warning_min && latest.value < threshold.warning_min) || (threshold.warning_max && latest.value > threshold.warning_max) %>
+          <% level = 'warning' %>
+        <% end %>
+      <% end %>
+      <div class="bg-white border border-gray-200 rounded-lg p-3.5 shadow-sm">
+        <div class="flex items-center justify-between mb-2.5">
+          <div class="w-7 h-7 rounded text-xs flex items-center justify-center border <%= 'bg-yellow-50 text-yellow-700 border-yellow-200' if sensor.ammonia? %> <%= 'bg-red-50 text-red-500 border-red-200' if sensor.temperature? %> <%= 'bg-green-50 text-green-600 border-green-200' if sensor.fan? %> <%= 'bg-blue-50 text-blue-600 border-blue-200' if sensor.humidity? %>">
+            <%= icon :bolt, class: "w-3.5 h-3.5" if sensor.ammonia? %>
+            <%= icon :thermometer, class: "w-3.5 h-3.5" if sensor.temperature? %>
+            <%= icon :fan, class: "w-3.5 h-3.5" if sensor.fan? %>
+            <%= icon :droplet, class: "w-3.5 h-3.5" if sensor.humidity? %>
+          </div>
+          <span class="text-[11px] font-semibold uppercase px-2 py-0.5 rounded-full border <%= 'bg-green-50 text-green-700 border-green-200' if level == 'normal' %> <%= 'bg-yellow-50 text-yellow-700 border-yellow-200' if level == 'warning' %> <%= 'bg-red-50 text-red-600 border-red-200' if level == 'critical' %>">
+            <%= sensor.fan? ? (sensor.online? ? 'Running' : 'Offline') : level.capitalize %>
+          </span>
+        </div>
+        <div class="text-lg font-bold <%= 'text-yellow-700' if level == 'warning' %> <%= 'text-red-600' if level == 'critical' %> <%= 'text-green-700' if level == 'normal' %>">
+          <%= sensor.fan? ? (sensor.online? ? icon(:check, class: 'w-5 h-5') : icon(:x_mark, class: 'w-5 h-5 text-red-600')) : "#{latest.value}#{latest.unit}" %>
+        </div>
+        <div class="text-xs text-gray-500 mt-1"><%= sensor.sensor_type.to_s.humanize %></div>
+        <div class="text-[11px] text-gray-400 mt-0.5">
+          <% if sensor.ammonia? %>
+            <%= level != 'normal' ? 'Above safe limit' : 'Within range' %>
+          <% elsif sensor.temperature? %>
+            <%= level != 'normal' ? 'Outside target range' : 'Within target range' %>
+          <% elsif sensor.humidity? %>
+            <%= level != 'normal' ? 'Outside target range' : 'Within target range' %>
+          <% elsif sensor.fan? %>
+            <%= sensor.online? ? 'Operational' : 'Needs attention' %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <% if fan_sensors.any? %>
+    <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wide mb-2.5">Fans</div>
+    <div class="grid grid-cols-3 gap-2 mb-3.5">
+      <% fan_sensors.each do |fan| %>
+        <div class="bg-white border border-gray-200 rounded p-3 text-center <%= 'border-red-200 bg-red-50' if fan.offline? %>">
+          <div class="mb-1 flex justify-center">
+            <%= fan.online? ? icon(:fan, class: "w-5 h-5 text-gray-500 animate-spin") : icon(:x_mark, class: "w-5 h-5 text-red-600") %>
+          </div>
+          <div class="text-[11px] text-gray-500 font-medium <%= 'text-red-600' if fan.offline? %>"><%= fan.label.presence || 'Fan' %></div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wide mb-2.5">Recent Events</div>
+  <div class="space-y-2">
+    <% if @alerts.any? %>
+      <% @alerts.each do |alert| %>
+        <div class="bg-white border border-gray-200 rounded p-3 flex items-start gap-3 shadow-sm hover:shadow-md hover:border-gray-300 transition-all <%= 'border-l-3 border-l-red-500' if alert.critical? %> <%= 'border-l-3 border-l-yellow-500' if alert.warning? %> <%= 'border-l-3 border-l-green-500 opacity-70' if alert.resolved? %>">
+          <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm border flex-shrink-0 <%= 'bg-yellow-50 text-yellow-700 border-yellow-200' if alert.alert_type.match?(/ammonia/i) %> <%= 'bg-red-50 text-red-500 border-red-200' if alert.alert_type.match?(/temperature/i) %> <%= 'bg-green-50 text-green-600 border-green-200' if alert.alert_type.match?(/fan/i) %> <%= 'bg-blue-50 text-blue-600 border-blue-200' if alert.alert_type.match?(/humidity/i) %>">
+            <%= icon :bolt, class: "w-4 h-4" if alert.alert_type.match?(/ammonia/i) %>
+            <%= icon :thermometer, class: "w-4 h-4" if alert.alert_type.match?(/temperature/i) %>
+            <%= icon :fan, class: "w-4 h-4" if alert.alert_type.match?(/fan/i) %>
+            <%= icon :droplet, class: "w-4 h-4" if alert.alert_type.match?(/humidity/i) %>
+            <%= icon :exclamation_circle, class: "w-4 h-4" if !alert.alert_type.match?(/ammonia|temperature|fan|humidity/i) %>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="text-xs font-semibold text-gray-900"><%= alert.alert_type.humanize %></div>
+            <div class="text-[11px] text-gray-500"><%= alert.message.presence || alert.alert_type.humanize %></div>
+            <div class="text-[11px] text-gray-400 mt-0.5"><%= time_ago_in_words(alert.created_at) %> ago</div>
+          </div>
+          <div class="text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full border flex-shrink-0 self-start <%= 'bg-red-50 text-red-600 border-red-200' if alert.critical? %> <%= 'bg-yellow-50 text-yellow-700 border-yellow-200' if alert.warning? %>">
+            <%= alert.severity.capitalize %>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="text-center py-8 text-gray-400">
+        <%= icon :check, class: "w-8 h-8 mx-auto mb-2 opacity-40" %>
+        <div class="text-sm">No recent events</div>
+      </div>
+    <% end %>
+  </div>
+</div>

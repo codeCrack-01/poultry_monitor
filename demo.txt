@@ -1,0 +1,317 @@
+# Poultry Farm Monitoring System - UX Design Brief
+
+## Project Overview
+
+We are building a mobile-first poultry farm monitoring system for farm owners and managers.
+
+The goal is not to create a technical sensor dashboard. The goal is to allow a farm owner to understand the health of their poultry farm in under 5 seconds and quickly identify where a problem exists.
+
+Most users will access the system from Android phones while working on-site. Desktop support is secondary.
+
+The system monitors environmental conditions inside poultry sheds and provides real-time operational visibility.
+
+---
+
+## Primary Users
+
+### Farm Owner
+
+Owns one or more farms.
+
+Needs to know:
+
+* Is any farm in trouble?
+* Which area has a problem?
+* How severe is the problem?
+* Do I need to take action immediately?
+
+The owner does NOT care about raw sensor values unless troubleshooting.
+
+---
+
+### Farm Manager / Operator
+
+Responsible for investigating issues.
+
+Needs additional visibility into:
+
+* Which zone has problems
+* Which fan may be malfunctioning
+* Which environmental parameter triggered the alert
+
+---
+
+## Business Context
+
+Current solutions are expensive, hardware-locked, and difficult to monitor.
+
+Many farms rely on:
+
+* Manual inspections
+* CCTV monitoring
+* Human observation
+
+The proposed system should provide a simpler and cheaper alternative.
+
+---
+
+# Core Metrics
+
+The system currently monitors:
+
+1. Temperature
+2. Humidity
+3. Ammonia Concentration
+4. Generator Status
+5. Fan Status
+
+No additional metrics should be assumed.
+
+---
+
+# Mental Model
+
+The system should be designed around physical locations rather than sensors.
+
+Users think:
+
+"Zone D is overheating."
+
+NOT:
+
+"Sensor #17 is reporting 34°C."
+
+The UI should therefore prioritize spatial understanding.
+
+---
+
+# Physical Structure
+
+Owner
+└── Farm(s)
+└── Shed
+└── Zones
+├── Fans
+└── Sensors
+
+A farm owner may own multiple farms.
+
+Each farm currently contains a single poultry shed.
+
+Each shed contains multiple zones.
+
+Each zone contains:
+
+* One or more fans
+* Multiple environmental sensors
+
+---
+
+# Zone Concept
+
+A Zone represents a physical region of the shed.
+
+A zone is not necessarily a wall-separated area.
+
+A zone is an operational area influenced by one or more fans and measured by nearby sensors.
+
+The system should aggregate environmental conditions at the zone level.
+
+Examples:
+
+Zone A
+
+* Fan Group 1
+* Temperature Sensors
+* Humidity Sensors
+* Ammonia Sensors
+
+Zone B
+
+* Fan Group 2
+* Temperature Sensors
+* Humidity Sensors
+* Ammonia Sensors
+
+etc.
+
+---
+
+# Design Philosophy
+
+The UI should answer operational questions before showing technical details.
+
+The user should not need to interpret raw sensor readings.
+
+The interface should prioritize:
+
+1. Health Status
+2. Location of Problems
+3. Severity
+4. Actionability
+
+Raw sensor data should be hidden behind drill-down screens.
+
+---
+
+# UX Questions The Design Must Answer
+
+## Question 1
+
+Is any farm unhealthy?
+
+The user should be able to answer this immediately after opening the app.
+
+---
+
+## Question 2
+
+Which farm requires attention?
+
+The problematic farm should be obvious.
+
+---
+
+## Question 3
+
+Which area of the shed is affected?
+
+Users should quickly identify the problematic zone.
+
+---
+
+## Question 4
+
+What is causing the problem?
+
+Possible examples:
+
+* High temperature
+* High ammonia
+* Fan failure
+* Generator failure
+
+---
+
+## Question 5
+
+How severe is the problem?
+
+Visual severity indicators should be clear.
+
+Examples:
+
+Green = Normal
+
+Yellow = Warning
+
+Red = Critical
+
+---
+
+# Information Hierarchy
+
+## Level 1
+
+Farm Overview
+
+Purpose:
+Show health status of all farms.
+
+---
+
+## Level 2
+
+Farm Health Dashboard
+
+Purpose:
+Show overall environmental condition of the selected farm.
+
+Display:
+
+* Temperature
+* Humidity
+* Ammonia
+* Generator Status
+* Fan Status
+
+---
+
+## Level 3
+
+Shed Zone View
+
+Purpose:
+Display the shed as a collection of zones.
+
+Users should immediately identify problematic areas.
+
+This is expected to be one of the most important screens.
+
+---
+
+## Level 4
+
+Zone Detail View
+
+Purpose:
+Show detailed information about a specific zone.
+
+Display:
+
+* Temperature
+* Humidity
+* Ammonia
+* Fan Status
+* Recent alerts
+
+Only here should device-level details begin to appear.
+
+---
+
+## Level 5
+
+Alerts
+
+Purpose:
+Provide a chronological list of incidents and warnings.
+
+Examples:
+
+* High Ammonia
+* High Temperature
+* Fan Offline
+* Generator Offline
+
+---
+
+# What Should NOT Be Prioritized
+
+Avoid designing around:
+
+* Sensor IDs
+* Technical diagnostics
+* Electrical values
+* ADC readings
+* Configuration screens
+* Complex analytics
+
+This is an operational monitoring product, not an engineering console.
+
+---
+
+# Desired Outcome
+
+The final design should feel closer to:
+
+* Industrial monitoring systems
+* Operational control dashboards
+* SCADA-inspired monitoring interfaces
+
+and less like:
+
+* Business analytics dashboards
+* CRM systems
+* Generic SaaS admin panels
+
+The user should be able to determine the operational health of a farm in seconds with minimal training.

@@ -1,0 +1,1453 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+        <title>Poultry Farm Monitor</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            /* ======== JetBrains IDE Light Theme Palette ======== */
+            :root {
+                --bg-primary: #ffffff;
+                --bg-secondary: #f7f8fa;
+                --bg-tertiary: #f0f1f2;
+                --bg-card: #ffffff;
+                --bg-card-hover: #f5f6f8;
+                --bg-sidebar: #f4f5f7;
+                --border: #dfe1e5;
+                --border-strong: #c9ccd1;
+                --border-focus: #3574f0;
+                --text-primary: #1e1f22;
+                --text-secondary: #6b7280;
+                --text-muted: #9ca3af;
+                --text-placeholder: #b0b3b8;
+                --green: #357a4a;
+                --green-bg: #e8f5e9;
+                --green-border: #a5d6a7;
+                --yellow: #a46a00;
+                --yellow-bg: #fff8e1;
+                --yellow-border: #ffe082;
+                --red: #c75450;
+                --red-bg: #ffebee;
+                --red-border: #ef9a9a;
+                --blue: #3574f0;
+                --blue-bg: #e3f2fd;
+                --blue-border: #90caf9;
+                --orange: #c77d1f;
+                --orange-bg: #fff3e0;
+                --orange-border: #ffcc80;
+                --radius-sm: 6px;
+                --radius-md: 8px;
+                --radius-lg: 10px;
+                --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+                --shadow-md:
+                    0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+                --shadow-card:
+                    0 1px 3px rgba(0, 0, 0, 0.08), 0 0 1px rgba(0, 0, 0, 0.1);
+            }
+
+            body {
+                font-family:
+                    -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter",
+                    "SF Pro Display", Roboto, Helvetica, Arial, sans-serif;
+                background: var(--bg-secondary);
+                color: var(--text-primary);
+                min-height: 100vh;
+                overflow-x: hidden;
+                -webkit-font-smoothing: antialiased;
+            }
+
+            /* ========== SCREEN TRANSITIONS ========== */
+            .screen {
+                display: none;
+                animation: fadeIn 0.2s ease;
+            }
+            .screen.active {
+                display: block;
+            }
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(4px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            /* ========== HEADER ========== */
+            .app-header {
+                position: sticky;
+                top: 0;
+                z-index: 100;
+                background: rgba(255, 255, 255, 0.96);
+                backdrop-filter: blur(12px);
+                border-bottom: 1px solid var(--border);
+                padding: 10px 16px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+            .header-left {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            .back-btn {
+                width: 32px;
+                height: 32px;
+                border-radius: var(--radius-sm);
+                background: transparent;
+                border: 1px solid var(--border);
+                color: var(--text-secondary);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                font-size: 16px;
+                transition: all 0.15s;
+            }
+            .back-btn:hover,
+            .back-btn:active {
+                background: var(--bg-tertiary);
+                border-color: var(--border-strong);
+            }
+            .header-title {
+                font-size: 16px;
+                font-weight: 600;
+                letter-spacing: -0.2px;
+                color: var(--text-primary);
+            }
+            .header-subtitle {
+                font-size: 12px;
+                color: var(--text-muted);
+                margin-top: 1px;
+            }
+            .header-right {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .alert-badge {
+                position: relative;
+                width: 36px;
+                height: 36px;
+                border-radius: var(--radius-sm);
+                background: transparent;
+                border: 1px solid var(--border);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                color: var(--text-secondary);
+                transition: all 0.15s;
+            }
+            .alert-badge:hover,
+            .alert-badge:active {
+                background: var(--bg-tertiary);
+            }
+            .alert-badge .dot {
+                position: absolute;
+                top: 6px;
+                right: 6px;
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: var(--red);
+                border: 2px solid var(--bg-primary);
+            }
+            .alert-badge .dot.yellow {
+                background: var(--yellow);
+            }
+
+            /* ========== STATUS BAR ========== */
+            .status-bar {
+                padding: 10px 16px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                background: var(--bg-primary);
+                border-bottom: 1px solid var(--border);
+            }
+            .status-pulse {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: var(--green);
+                box-shadow: 0 0 0 0 rgba(53, 122, 74, 0.4);
+                animation: pulse-green 2.5s infinite;
+            }
+            .status-pulse.yellow {
+                background: var(--yellow);
+                box-shadow: 0 0 0 0 rgba(164, 106, 0, 0.4);
+                animation: pulse-yellow 2.5s infinite;
+            }
+            .status-pulse.red {
+                background: var(--red);
+                box-shadow: 0 0 0 0 rgba(199, 84, 80, 0.4);
+                animation: pulse-red 2.5s infinite;
+            }
+            @keyframes pulse-green {
+                0% {
+                    box-shadow: 0 0 0 0 rgba(53, 122, 74, 0.4);
+                }
+                70% {
+                    box-shadow: 0 0 0 6px rgba(53, 122, 74, 0);
+                }
+                100% {
+                    box-shadow: 0 0 0 0 rgba(53, 122, 74, 0);
+                }
+            }
+            @keyframes pulse-yellow {
+                0% {
+                    box-shadow: 0 0 0 0 rgba(164, 106, 0, 0.4);
+                }
+                70% {
+                    box-shadow: 0 0 0 6px rgba(164, 106, 0, 0);
+                }
+                100% {
+                    box-shadow: 0 0 0 0 rgba(164, 106, 0, 0);
+                }
+            }
+            @keyframes pulse-red {
+                0% {
+                    box-shadow: 0 0 0 0 rgba(199, 84, 80, 0.4);
+                }
+                70% {
+                    box-shadow: 0 0 0 8px rgba(199, 84, 80, 0);
+                }
+                100% {
+                    box-shadow: 0 0 0 0 rgba(199, 84, 80, 0);
+                }
+            }
+            .status-text {
+                font-size: 13px;
+                font-weight: 500;
+            }
+            .status-text.green {
+                color: var(--green);
+            }
+            .status-text.yellow {
+                color: var(--yellow);
+            }
+            .status-text.red {
+                color: var(--red);
+            }
+            .status-time {
+                margin-left: auto;
+                font-size: 11px;
+                color: var(--text-muted);
+            }
+
+            /* ========== CONTENT ========== */
+            .content {
+                padding: 12px 16px 80px;
+            }
+
+            /* ========== FARM CARDS ========== */
+            .farm-card {
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                border-radius: var(--radius-md);
+                padding: 0;
+                margin-bottom: 10px;
+                cursor: pointer;
+                transition: all 0.15s ease;
+                position: relative;
+                overflow: hidden;
+                box-shadow: var(--shadow-sm);
+            }
+            .farm-card:active {
+                transform: scale(0.995);
+            }
+            .farm-card:hover {
+                box-shadow: var(--shadow-md);
+                border-color: var(--border-strong);
+            }
+            .farm-card-top {
+                padding: 14px 16px 10px;
+                border-bottom: 1px solid var(--border);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+            .farm-card-top.critical {
+                background: var(--red-bg);
+                border-bottom-color: var(--red-border);
+            }
+            .farm-card-top.warning {
+                background: var(--yellow-bg);
+                border-bottom-color: var(--yellow-border);
+            }
+            .farm-card-top.normal {
+                background: var(--green-bg);
+                border-bottom-color: var(--green-border);
+            }
+            .farm-name {
+                font-size: 15px;
+                font-weight: 600;
+                color: var(--text-primary);
+            }
+            .farm-status-badge {
+                padding: 3px 10px;
+                border-radius: 20px;
+                font-size: 11px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.4px;
+            }
+            .farm-status-badge.normal {
+                background: var(--green-bg);
+                color: var(--green);
+                border: 1px solid var(--green-border);
+            }
+            .farm-status-badge.warning {
+                background: var(--yellow-bg);
+                color: var(--yellow);
+                border: 1px solid var(--yellow-border);
+            }
+            .farm-status-badge.critical {
+                background: var(--red-bg);
+                color: var(--red);
+                border: 1px solid var(--red-border);
+            }
+            .farm-card-body {
+                padding: 12px 16px;
+            }
+            .farm-alert-count {
+                font-size: 13px;
+                font-weight: 600;
+                margin-bottom: 8px;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+            .farm-alert-count.critical {
+                color: var(--red);
+            }
+            .farm-alert-count.warning {
+                color: var(--yellow);
+            }
+            .farm-alert-chips {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+            .alert-chip {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                padding: 4px 10px;
+                border-radius: 20px;
+                font-size: 12px;
+                font-weight: 500;
+                border: 1px solid;
+            }
+            .alert-chip.red {
+                background: var(--red-bg);
+                color: var(--red);
+                border-color: var(--red-border);
+            }
+            .alert-chip.yellow {
+                background: var(--yellow-bg);
+                color: var(--yellow);
+                border-color: var(--yellow-border);
+            }
+            .alert-chip.green {
+                background: var(--green-bg);
+                color: var(--green);
+                border-color: var(--green-border);
+            }
+            .farm-metrics-row {
+                display: flex;
+                gap: 16px;
+                margin-top: 12px;
+                padding-top: 12px;
+                border-top: 1px solid var(--border);
+            }
+            .farm-metric {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+            .farm-metric-icon {
+                font-size: 14px;
+            }
+            .farm-metric-value {
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--text-secondary);
+            }
+            .farm-metric-value.red {
+                color: var(--red);
+            }
+            .farm-metric-value.yellow {
+                color: var(--yellow);
+            }
+            .farm-metric-value.green {
+                color: var(--green);
+            }
+            .farm-metric-label {
+                font-size: 11px;
+                color: var(--text-muted);
+            }
+
+            /* ========== METRIC GRID ========== */
+            .metric-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+                margin-bottom: 14px;
+            }
+            .metric-card {
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                border-radius: var(--radius-md);
+                padding: 14px;
+                position: relative;
+                overflow: hidden;
+                box-shadow: var(--shadow-sm);
+                transition: all 0.15s;
+            }
+            .metric-card:hover {
+                box-shadow: var(--shadow-md);
+                border-color: var(--border-strong);
+            }
+            .metric-card-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 10px;
+            }
+            .metric-icon {
+                width: 28px;
+                height: 28px;
+                border-radius: var(--radius-sm);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 14px;
+            }
+            .metric-icon.temp {
+                background: var(--red-bg);
+                color: var(--red);
+                border: 1px solid var(--red-border);
+            }
+            .metric-icon.humidity {
+                background: var(--blue-bg);
+                color: var(--blue);
+                border: 1px solid var(--blue-border);
+            }
+            .metric-icon.ammonia {
+                background: var(--yellow-bg);
+                color: var(--yellow);
+                border: 1px solid var(--yellow-border);
+            }
+            .metric-icon.fan {
+                background: var(--green-bg);
+                color: var(--green);
+                border: 1px solid var(--green-border);
+            }
+            .metric-icon.gen {
+                background: var(--orange-bg);
+                color: var(--orange);
+                border: 1px solid var(--orange-border);
+            }
+            .metric-state {
+                font-size: 11px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.3px;
+                padding: 2px 8px;
+                border-radius: 10px;
+            }
+            .metric-state.normal {
+                background: var(--green-bg);
+                color: var(--green);
+            }
+            .metric-state.warning {
+                background: var(--yellow-bg);
+                color: var(--yellow);
+            }
+            .metric-state.critical {
+                background: var(--red-bg);
+                color: var(--red);
+            }
+            .metric-value {
+                font-size: 24px;
+                font-weight: 700;
+                letter-spacing: -0.5px;
+                color: var(--text-primary);
+            }
+            .metric-value.red {
+                color: var(--red);
+            }
+            .metric-value.yellow {
+                color: var(--yellow);
+            }
+            .metric-value.green {
+                color: var(--green);
+            }
+            .metric-label {
+                font-size: 12px;
+                color: var(--text-secondary);
+                margin-top: 4px;
+            }
+            .metric-sub {
+                font-size: 11px;
+                color: var(--text-muted);
+                margin-top: 2px;
+            }
+
+            /* ========== ZONE MAP ========== */
+            .section-title {
+                font-size: 12px;
+                font-weight: 600;
+                color: var(--text-muted);
+                margin: 18px 0 10px;
+                text-transform: uppercase;
+                letter-spacing: 0.6px;
+            }
+            .shed-map {
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                border-radius: var(--radius-md);
+                padding: 14px;
+                box-shadow: var(--shadow-sm);
+            }
+            .shed-label {
+                font-size: 11px;
+                color: var(--text-muted);
+                text-align: center;
+                margin-bottom: 10px;
+                text-transform: uppercase;
+                letter-spacing: 1.5px;
+                font-weight: 500;
+            }
+            .zone-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            .zone-cell {
+                background: var(--bg-secondary);
+                border: 2px solid var(--border);
+                border-radius: var(--radius-sm);
+                padding: 12px 10px;
+                text-align: center;
+                cursor: pointer;
+                transition: all 0.15s;
+                position: relative;
+            }
+            .zone-cell:active {
+                transform: scale(0.98);
+            }
+            .zone-cell:hover {
+                border-color: var(--border-strong);
+            }
+            .zone-cell.normal {
+                border-color: var(--green-border);
+                background: var(--green-bg);
+            }
+            .zone-cell.warning {
+                border-color: var(--yellow-border);
+                background: var(--yellow-bg);
+            }
+            .zone-cell.critical {
+                border-color: var(--red);
+                background: var(--red-bg);
+                animation: borderPulse 2s infinite;
+            }
+            @keyframes borderPulse {
+                0%,
+                100% {
+                    border-color: var(--red);
+                }
+                50% {
+                    border-color: var(--red-border);
+                }
+            }
+            .zone-name {
+                font-size: 14px;
+                font-weight: 600;
+                margin-bottom: 4px;
+                color: var(--text-primary);
+            }
+            .zone-status {
+                font-size: 11px;
+                font-weight: 600;
+                padding: 2px 8px;
+                border-radius: 10px;
+                display: inline-block;
+            }
+            .zone-status.normal {
+                background: var(--green-bg);
+                color: var(--green);
+                border: 1px solid var(--green-border);
+            }
+            .zone-status.warning {
+                background: var(--yellow-bg);
+                color: var(--yellow);
+                border: 1px solid var(--yellow-border);
+            }
+            .zone-status.critical {
+                background: var(--red-bg);
+                color: var(--red);
+                border: 1px solid var(--red-border);
+            }
+            .zone-issues {
+                margin-top: 6px;
+                font-size: 11px;
+                color: var(--text-secondary);
+                line-height: 1.5;
+            }
+            .zone-issues .issue {
+                display: inline-flex;
+                align-items: center;
+                gap: 3px;
+                margin: 1px 2px;
+            }
+
+            /* ========== ZONE DETAIL ========== */
+            .zone-detail-header {
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                border-radius: var(--radius-md);
+                padding: 18px;
+                margin-bottom: 14px;
+                text-align: center;
+                box-shadow: var(--shadow-sm);
+            }
+            .zone-detail-header.critical {
+                border-color: var(--red-border);
+                background: var(--red-bg);
+            }
+            .zone-detail-header.warning {
+                border-color: var(--yellow-border);
+                background: var(--yellow-bg);
+            }
+            .zone-detail-name {
+                font-size: 20px;
+                font-weight: 700;
+                margin-bottom: 6px;
+                color: var(--text-primary);
+            }
+            .zone-detail-status {
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+                padding: 4px 12px;
+                border-radius: 20px;
+                font-size: 12px;
+                font-weight: 600;
+                border: 1px solid;
+            }
+            .zone-detail-status.normal {
+                background: var(--green-bg);
+                color: var(--green);
+                border-color: var(--green-border);
+            }
+            .zone-detail-status.warning {
+                background: var(--yellow-bg);
+                color: var(--yellow);
+                border-color: var(--yellow-border);
+            }
+            .zone-detail-status.critical {
+                background: var(--red-bg);
+                color: var(--red);
+                border-color: var(--red-border);
+            }
+
+            /* ========== FAN STATUS ========== */
+            .fan-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+                margin-bottom: 14px;
+            }
+            .fan-item {
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                border-radius: var(--radius-sm);
+                padding: 12px 8px;
+                text-align: center;
+                box-shadow: var(--shadow-sm);
+                transition: all 0.15s;
+            }
+            .fan-item:hover {
+                border-color: var(--border-strong);
+            }
+            .fan-icon {
+                font-size: 22px;
+                margin-bottom: 6px;
+                display: inline-block;
+            }
+            .fan-icon.spin {
+                animation: spin 1.5s linear infinite;
+            }
+            @keyframes spin {
+                from {
+                    transform: rotate(0deg);
+                }
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+            .fan-name {
+                font-size: 11px;
+                color: var(--text-secondary);
+                font-weight: 500;
+            }
+            .fan-item.offline {
+                border-color: var(--red-border);
+                background: var(--red-bg);
+            }
+            .fan-item.offline .fan-name {
+                color: var(--red);
+            }
+
+            /* ========== ALERT LIST ========== */
+            .alert-list {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+            .alert-item {
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                border-radius: var(--radius-sm);
+                padding: 12px 14px;
+                display: flex;
+                align-items: flex-start;
+                gap: 12px;
+                box-shadow: var(--shadow-sm);
+                transition: all 0.15s;
+            }
+            .alert-item:hover {
+                border-color: var(--border-strong);
+                box-shadow: var(--shadow-md);
+            }
+            .alert-item.critical {
+                border-left: 3px solid var(--red);
+            }
+            .alert-item.warning {
+                border-left: 3px solid var(--yellow);
+            }
+            .alert-item.resolved {
+                border-left: 3px solid var(--green);
+                opacity: 0.7;
+            }
+            .alert-icon {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+                font-size: 14px;
+                border: 1px solid;
+            }
+            .alert-icon.red {
+                background: var(--red-bg);
+                color: var(--red);
+                border-color: var(--red-border);
+            }
+            .alert-icon.yellow {
+                background: var(--yellow-bg);
+                color: var(--yellow);
+                border-color: var(--yellow-border);
+            }
+            .alert-icon.green {
+                background: var(--green-bg);
+                color: var(--green);
+                border-color: var(--green-border);
+            }
+            .alert-content {
+                flex: 1;
+            }
+            .alert-title {
+                font-size: 13px;
+                font-weight: 600;
+                margin-bottom: 2px;
+                color: var(--text-primary);
+            }
+            .alert-location {
+                font-size: 12px;
+                color: var(--text-secondary);
+                margin-bottom: 3px;
+            }
+            .alert-time {
+                font-size: 11px;
+                color: var(--text-muted);
+            }
+            .alert-severity {
+                padding: 2px 8px;
+                border-radius: 10px;
+                font-size: 10px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.3px;
+                border: 1px solid;
+                flex-shrink: 0;
+                align-self: flex-start;
+            }
+            .alert-severity.critical {
+                background: var(--red-bg);
+                color: var(--red);
+                border-color: var(--red-border);
+            }
+            .alert-severity.warning {
+                background: var(--yellow-bg);
+                color: var(--yellow);
+                border-color: var(--yellow-border);
+            }
+
+            /* ========== BOTTOM NAV ========== */
+            .bottom-nav {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: rgba(255, 255, 255, 0.96);
+                backdrop-filter: blur(12px);
+                border-top: 1px solid var(--border);
+                display: flex;
+                justify-content: space-around;
+                padding: 6px 0 14px;
+                z-index: 100;
+            }
+            .nav-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 2px;
+                padding: 4px 16px;
+                cursor: pointer;
+                color: var(--text-muted);
+                transition: color 0.15s;
+                border: none;
+                background: none;
+                font-family: inherit;
+            }
+            .nav-item.active {
+                color: var(--blue);
+            }
+            .nav-item:active {
+                opacity: 0.7;
+            }
+            .nav-icon {
+                font-size: 20px;
+            }
+            .nav-label {
+                font-size: 10px;
+                font-weight: 500;
+            }
+
+            /* ========== EMPTY STATE ========== */
+            .empty-state {
+                text-align: center;
+                padding: 40px 20px;
+                color: var(--text-muted);
+            }
+            .empty-state-icon {
+                font-size: 44px;
+                margin-bottom: 10px;
+                opacity: 0.4;
+            }
+            .empty-state-text {
+                font-size: 13px;
+            }
+
+            /* ========== SCROLLBAR ========== */
+            ::-webkit-scrollbar {
+                width: 4px;
+            }
+            ::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            ::-webkit-scrollbar-thumb {
+                background: var(--border);
+                border-radius: 2px;
+            }
+
+            /* ========== RESPONSIVE ========== */
+            @media (min-width: 768px) {
+                body {
+                    max-width: 430px;
+                    margin: 0 auto;
+                    border-left: 1px solid var(--border);
+                    border-right: 1px solid var(--border);
+                    background: #e8e9eb;
+                }
+                .bottom-nav {
+                    max-width: 430px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                }
+            }
+        </style>
+        <base target="_blank" />
+    </head>
+    <body>
+        <!-- ==================== SCREEN 1: FARM OVERVIEW ==================== -->
+        <div class="screen active" id="screen-overview">
+            <div class="app-header">
+                <div class="header-left">
+                    <div class="header-title">My Farms</div>
+                </div>
+                <div class="header-right">
+                    <div
+                        class="alert-badge"
+                        onclick="showScreen('screen-alerts')"
+                    >
+                        <span style="font-size: 16px">&#128276;</span>
+                        <span class="dot"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="status-bar">
+                <div class="status-pulse red"></div>
+                <div class="status-text red">1 farm needs attention</div>
+                <div class="status-time">Updated 8 sec ago</div>
+            </div>
+
+            <div class="content">
+                <!-- Farm 1: Critical -->
+                <div class="farm-card" onclick="showScreen('screen-farm')">
+                    <div class="farm-card-top critical">
+                        <div class="farm-name">Green Valley Farm</div>
+                        <div class="farm-status-badge critical">Critical</div>
+                    </div>
+                    <div class="farm-card-body">
+                        <div class="farm-alert-count critical">
+                            <span>&#128308;</span> 3 Critical Alerts
+                        </div>
+                        <div class="farm-alert-chips">
+                            <div class="alert-chip red">
+                                &#128293; High Temperature
+                            </div>
+                            <div class="alert-chip red">
+                                &#9889; High Ammonia
+                            </div>
+                            <div class="alert-chip red">
+                                &#128736; Fan Failure
+                            </div>
+                        </div>
+                        <div class="farm-metrics-row">
+                            <div class="farm-metric">
+                                <span class="farm-metric-icon">&#127777;</span>
+                                <span class="farm-metric-value red"
+                                    >34.2°C</span
+                                >
+                            </div>
+                            <div class="farm-metric">
+                                <span class="farm-metric-icon">&#128167;</span>
+                                <span class="farm-metric-value yellow"
+                                    >68%</span
+                                >
+                            </div>
+                            <div class="farm-metric">
+                                <span class="farm-metric-icon">&#9889;</span>
+                                <span class="farm-metric-value red"
+                                    >28 ppm</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Farm 2: Normal -->
+                <div class="farm-card" onclick="showScreen('screen-farm')">
+                    <div class="farm-card-top normal">
+                        <div class="farm-name">Sunrise Poultry</div>
+                        <div class="farm-status-badge normal">Normal</div>
+                    </div>
+                    <div class="farm-card-body">
+                        <div
+                            class="farm-alert-count"
+                            style="color: var(--green)"
+                        >
+                            <span>&#128994;</span> All systems normal
+                        </div>
+                        <div class="farm-metrics-row">
+                            <div class="farm-metric">
+                                <span class="farm-metric-icon">&#127777;</span>
+                                <span class="farm-metric-value green"
+                                    >24.5°C</span
+                                >
+                            </div>
+                            <div class="farm-metric">
+                                <span class="farm-metric-icon">&#128167;</span>
+                                <span class="farm-metric-value green">55%</span>
+                            </div>
+                            <div class="farm-metric">
+                                <span class="farm-metric-icon">&#9889;</span>
+                                <span class="farm-metric-value green"
+                                    >8 ppm</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Farm 3: Warning -->
+                <div class="farm-card" onclick="showScreen('screen-farm')">
+                    <div class="farm-card-top warning">
+                        <div class="farm-name">Hillside Coop</div>
+                        <div class="farm-status-badge warning">Warning</div>
+                    </div>
+                    <div class="farm-card-body">
+                        <div class="farm-alert-count warning">
+                            <span>&#128993;</span> 1 Warning
+                        </div>
+                        <div class="farm-alert-chips">
+                            <div class="alert-chip yellow">
+                                &#128293; Rising Temperature
+                            </div>
+                        </div>
+                        <div class="farm-metrics-row">
+                            <div class="farm-metric">
+                                <span class="farm-metric-icon">&#127777;</span>
+                                <span class="farm-metric-value yellow"
+                                    >29.8°C</span
+                                >
+                            </div>
+                            <div class="farm-metric">
+                                <span class="farm-metric-icon">&#128167;</span>
+                                <span class="farm-metric-value green">52%</span>
+                            </div>
+                            <div class="farm-metric">
+                                <span class="farm-metric-icon">&#9889;</span>
+                                <span class="farm-metric-value yellow"
+                                    >18 ppm</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SCREEN 2: FARM DASHBOARD ==================== -->
+        <div class="screen" id="screen-farm">
+            <div class="app-header">
+                <div class="header-left">
+                    <button
+                        class="back-btn"
+                        onclick="showScreen('screen-overview')"
+                    >
+                        &#8592;
+                    </button>
+                    <div>
+                        <div class="header-title">Green Valley Farm</div>
+                        <div class="header-subtitle">
+                            Shed 1 &middot; 4 Zones
+                        </div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div
+                        class="alert-badge"
+                        onclick="showScreen('screen-alerts')"
+                    >
+                        <span style="font-size: 16px">&#128276;</span>
+                        <span class="dot"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="status-bar">
+                <div class="status-pulse red"></div>
+                <div class="status-text red">3 active alerts</div>
+                <div class="status-time">Updated 8 sec ago</div>
+            </div>
+
+            <div class="content">
+                <div class="metric-grid">
+                    <div class="metric-card">
+                        <div class="metric-card-header">
+                            <div class="metric-icon temp">&#127777;</div>
+                            <div class="metric-state critical">High</div>
+                        </div>
+                        <div class="metric-value red">34.2°C</div>
+                        <div class="metric-label">Temperature</div>
+                        <div class="metric-sub">Target: 24–26°C</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-card-header">
+                            <div class="metric-icon humidity">&#128167;</div>
+                            <div class="metric-state warning">High</div>
+                        </div>
+                        <div class="metric-value yellow">68%</div>
+                        <div class="metric-label">Humidity</div>
+                        <div class="metric-sub">Target: 50–60%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-card-header">
+                            <div class="metric-icon ammonia">&#9889;</div>
+                            <div class="metric-state critical">High</div>
+                        </div>
+                        <div class="metric-value red">28 ppm</div>
+                        <div class="metric-label">Ammonia</div>
+                        <div class="metric-sub">Limit: 25 ppm</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-card-header">
+                            <div class="metric-icon fan">&#128168;</div>
+                            <div class="metric-state warning">1 Offline</div>
+                        </div>
+                        <div class="metric-value green">7/8</div>
+                        <div class="metric-label">Fans Running</div>
+                        <div class="metric-sub">Zone C affected</div>
+                    </div>
+                </div>
+
+                <div class="metric-card" style="margin-bottom: 14px">
+                    <div class="metric-card-header">
+                        <div class="metric-icon gen">&#9881;</div>
+                        <div class="metric-state normal">Running</div>
+                    </div>
+                    <div class="metric-value green">Generator</div>
+                    <div class="metric-label">
+                        Backup Power &middot; Fuel: 87%
+                    </div>
+                </div>
+
+                <div class="section-title">Shed Zones</div>
+                <div class="shed-map">
+                    <div class="shed-label">Shed 1 Layout</div>
+                    <div class="zone-grid">
+                        <div
+                            class="zone-cell normal"
+                            onclick="showScreen('screen-zone')"
+                        >
+                            <div class="zone-name">Zone A</div>
+                            <div class="zone-status normal">Normal</div>
+                            <div class="zone-issues">
+                                <span class="issue">&#127777; 25°C</span>
+                                <span class="issue">&#128167; 54%</span>
+                            </div>
+                        </div>
+                        <div
+                            class="zone-cell warning"
+                            onclick="showScreen('screen-zone')"
+                        >
+                            <div class="zone-name">Zone B</div>
+                            <div class="zone-status warning">Warning</div>
+                            <div class="zone-issues">
+                                <span class="issue">&#127777; 30°C</span>
+                                <span class="issue">&#9889; 19 ppm</span>
+                            </div>
+                        </div>
+                        <div
+                            class="zone-cell critical"
+                            onclick="showScreen('screen-zone')"
+                        >
+                            <div class="zone-name">Zone C</div>
+                            <div class="zone-status critical">Critical</div>
+                            <div class="zone-issues">
+                                <span class="issue">&#127777; 34°C</span>
+                                <span class="issue">&#9889; 28 ppm</span>
+                                <span class="issue"
+                                    >&#128736; Fan 3 Offline</span
+                                >
+                            </div>
+                        </div>
+                        <div
+                            class="zone-cell normal"
+                            onclick="showScreen('screen-zone')"
+                        >
+                            <div class="zone-name">Zone D</div>
+                            <div class="zone-status normal">Normal</div>
+                            <div class="zone-issues">
+                                <span class="issue">&#127777; 24°C</span>
+                                <span class="issue">&#128167; 52%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SCREEN 3: ZONE DETAIL ==================== -->
+        <div class="screen" id="screen-zone">
+            <div class="app-header">
+                <div class="header-left">
+                    <button
+                        class="back-btn"
+                        onclick="showScreen('screen-farm')"
+                    >
+                        &#8592;
+                    </button>
+                    <div>
+                        <div class="header-title">Zone C</div>
+                        <div class="header-subtitle">
+                            Green Valley Farm &middot; Shed 1
+                        </div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div
+                        class="alert-badge"
+                        onclick="showScreen('screen-alerts')"
+                    >
+                        <span style="font-size: 16px">&#128276;</span>
+                        <span class="dot"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="status-bar">
+                <div class="status-pulse red"></div>
+                <div class="status-text red">2 critical issues</div>
+                <div class="status-time">Updated 8 sec ago</div>
+            </div>
+
+            <div class="content">
+                <div class="zone-detail-header critical">
+                    <div class="zone-detail-name">Zone C</div>
+                    <div class="zone-detail-status critical">
+                        <span style="font-size: 13px">&#9888;</span> Critical
+                    </div>
+                </div>
+
+                <div class="metric-grid">
+                    <div class="metric-card">
+                        <div class="metric-card-header">
+                            <div class="metric-icon temp">&#127777;</div>
+                            <div class="metric-state critical">High</div>
+                        </div>
+                        <div class="metric-value red">34.2°C</div>
+                        <div class="metric-label">Temperature</div>
+                        <div class="metric-sub">+8°C above target</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-card-header">
+                            <div class="metric-icon humidity">&#128167;</div>
+                            <div class="metric-state warning">High</div>
+                        </div>
+                        <div class="metric-value yellow">68%</div>
+                        <div class="metric-label">Humidity</div>
+                        <div class="metric-sub">+8% above target</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-card-header">
+                            <div class="metric-icon ammonia">&#9889;</div>
+                            <div class="metric-state critical">High</div>
+                        </div>
+                        <div class="metric-value red">28 ppm</div>
+                        <div class="metric-label">Ammonia</div>
+                        <div class="metric-sub">+3 ppm above limit</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-card-header">
+                            <div class="metric-icon fan">&#128168;</div>
+                            <div class="metric-state critical">1 Offline</div>
+                        </div>
+                        <div class="metric-value red">1/2</div>
+                        <div class="metric-label">Fans Running</div>
+                        <div class="metric-sub">Fan 3 offline</div>
+                    </div>
+                </div>
+
+                <div class="section-title">Fans</div>
+                <div class="fan-grid">
+                    <div class="fan-item">
+                        <div class="fan-icon spin">&#128168;</div>
+                        <div class="fan-name">Fan 1</div>
+                    </div>
+                    <div class="fan-item">
+                        <div class="fan-icon spin">&#128168;</div>
+                        <div class="fan-name">Fan 2</div>
+                    </div>
+                    <div class="fan-item offline">
+                        <div class="fan-icon">&#10060;</div>
+                        <div class="fan-name">Fan 3</div>
+                    </div>
+                </div>
+
+                <div class="section-title">Recent Events</div>
+                <div class="alert-list">
+                    <div class="alert-item critical">
+                        <div class="alert-icon red">&#127777;</div>
+                        <div class="alert-content">
+                            <div class="alert-title">High Temperature</div>
+                            <div class="alert-location">
+                                Zone C &middot; 34.2°C detected
+                            </div>
+                            <div class="alert-time">12 min ago</div>
+                        </div>
+                        <div class="alert-severity critical">Critical</div>
+                    </div>
+                    <div class="alert-item critical">
+                        <div class="alert-icon red">&#9889;</div>
+                        <div class="alert-content">
+                            <div class="alert-title">High Ammonia</div>
+                            <div class="alert-location">
+                                Zone C &middot; 28 ppm detected
+                            </div>
+                            <div class="alert-time">15 min ago</div>
+                        </div>
+                        <div class="alert-severity critical">Critical</div>
+                    </div>
+                    <div class="alert-item critical">
+                        <div class="alert-icon red">&#128736;</div>
+                        <div class="alert-content">
+                            <div class="alert-title">Fan Offline</div>
+                            <div class="alert-location">
+                                Zone C &middot; Fan 3 stopped
+                            </div>
+                            <div class="alert-time">18 min ago</div>
+                        </div>
+                        <div class="alert-severity critical">Critical</div>
+                    </div>
+                    <div class="alert-item warning">
+                        <div class="alert-icon yellow">&#128167;</div>
+                        <div class="alert-content">
+                            <div class="alert-title">High Humidity</div>
+                            <div class="alert-location">
+                                Zone C &middot; 68% detected
+                            </div>
+                            <div class="alert-time">25 min ago</div>
+                        </div>
+                        <div class="alert-severity warning">Warning</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SCREEN 4: ALERTS ==================== -->
+        <div class="screen" id="screen-alerts">
+            <div class="app-header">
+                <div class="header-left">
+                    <button
+                        class="back-btn"
+                        onclick="showScreen('screen-overview')"
+                    >
+                        &#8592;
+                    </button>
+                    <div class="header-title">Alerts</div>
+                </div>
+            </div>
+
+            <div class="status-bar">
+                <div class="status-pulse yellow"></div>
+                <div class="status-text yellow">4 active alerts</div>
+                <div class="status-time">Updated 8 sec ago</div>
+            </div>
+
+            <div class="content">
+                <div class="section-title">Critical</div>
+                <div class="alert-list">
+                    <div class="alert-item critical">
+                        <div class="alert-icon red">&#127777;</div>
+                        <div class="alert-content">
+                            <div class="alert-title">High Temperature</div>
+                            <div class="alert-location">
+                                Green Valley &middot; Zone C &middot; 34.2°C
+                            </div>
+                            <div class="alert-time">12 min ago</div>
+                        </div>
+                        <div class="alert-severity critical">Critical</div>
+                    </div>
+                    <div class="alert-item critical">
+                        <div class="alert-icon red">&#9889;</div>
+                        <div class="alert-content">
+                            <div class="alert-title">High Ammonia</div>
+                            <div class="alert-location">
+                                Green Valley &middot; Zone C &middot; 28 ppm
+                            </div>
+                            <div class="alert-time">15 min ago</div>
+                        </div>
+                        <div class="alert-severity critical">Critical</div>
+                    </div>
+                    <div class="alert-item critical">
+                        <div class="alert-icon red">&#128736;</div>
+                        <div class="alert-content">
+                            <div class="alert-title">Fan Offline</div>
+                            <div class="alert-location">
+                                Green Valley &middot; Zone C &middot; Fan 3
+                            </div>
+                            <div class="alert-time">18 min ago</div>
+                        </div>
+                        <div class="alert-severity critical">Critical</div>
+                    </div>
+                </div>
+
+                <div class="section-title">Warning</div>
+                <div class="alert-list">
+                    <div class="alert-item warning">
+                        <div class="alert-icon yellow">&#127777;</div>
+                        <div class="alert-content">
+                            <div class="alert-title">Rising Temperature</div>
+                            <div class="alert-location">
+                                Hillside Coop &middot; Zone B &middot; 29.8°C
+                            </div>
+                            <div class="alert-time">32 min ago</div>
+                        </div>
+                        <div class="alert-severity warning">Warning</div>
+                    </div>
+                </div>
+
+                <div class="section-title">Resolved Today</div>
+                <div class="alert-list">
+                    <div class="alert-item resolved">
+                        <div class="alert-icon green">&#128167;</div>
+                        <div class="alert-content">
+                            <div class="alert-title">
+                                Humidity Spike Resolved
+                            </div>
+                            <div class="alert-location">
+                                Sunrise Poultry &middot; Zone A
+                            </div>
+                            <div class="alert-time">
+                                2 hr ago &middot; Resolved 1 hr ago
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== BOTTOM NAV ==================== -->
+        <div class="bottom-nav">
+            <div
+                class="nav-item active"
+                onclick="showScreen('screen-overview')"
+            >
+                <div class="nav-icon">&#127968;</div>
+                <div class="nav-label">Farms</div>
+            </div>
+            <div class="nav-item" onclick="showScreen('screen-alerts')">
+                <div class="nav-icon">&#128276;</div>
+                <div class="nav-label">Alerts</div>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">&#9881;</div>
+                <div class="nav-label">Settings</div>
+            </div>
+        </div>
+
+        <script>
+            function showScreen(screenId) {
+                document
+                    .querySelectorAll(".screen")
+                    .forEach((s) => s.classList.remove("active"));
+                document.getElementById(screenId).classList.add("active");
+                window.scrollTo(0, 0);
+            }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,13 @@
+green_valley:
+  name: Green Valley Farm
+  location: 123 Green Valley Rd
+  status: critical
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.hour.ago %>
+
+sunrise:
+  name: Sunrise Poultry
+  location: 456 Sunrise Blvd
+  status: normal
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.hour.ago %>

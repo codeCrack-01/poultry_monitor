@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title><%= content_for(:title) || "Poultry Monitor" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Poultry Monitor">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= yield :head %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="font-sans antialiased bg-gray-100 text-gray-900 min-h-screen">
+    <div class="min-h-screen md:max-w-[430px] md:mx-auto md:border-x md:border-gray-200 bg-white relative">
+      <%= yield %>
+
+      <%= render "shared/bottom_nav" %>
+    </div>
+  </body>
+</html>

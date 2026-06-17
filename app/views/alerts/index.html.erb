@@ -1,0 +1,106 @@
+<div class="sticky top-0 z-50 bg-white/96 backdrop-blur-md border-b border-gray-200 px-4 py-2.5 flex items-center justify-between">
+  <div class="flex items-center gap-2.5">
+    <button onclick="history.back()" class="w-8 h-8 rounded-md border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-gray-50">
+      <%= icon :chevron_left, class: "w-4 h-4" %>
+    </button>
+    <div class="text-base font-semibold">Alerts</div>
+  </div>
+</div>
+
+<% total_active = @critical.count + @warnings.count %>
+<div class="flex items-center gap-2.5 px-4 py-2.5 bg-white border-b border-gray-200">
+  <div class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></div>
+  <span class="text-sm font-medium text-yellow-700"><%= pluralize(total_active, 'active alert') %></span>
+  <span class="ml-auto text-[11px] text-gray-400">Updated just now</span>
+</div>
+
+<div class="px-4 pt-3 pb-24 space-y-4">
+  <% if @critical.any? %>
+    <div>
+      <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wide mb-2">Critical</div>
+      <div class="space-y-2">
+        <% @critical.each do |alert| %>
+          <div class="bg-white border border-gray-200 rounded p-3 flex items-start gap-3 shadow-sm hover:shadow-md hover:border-gray-300 transition-all border-l-3 border-l-red-500">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm border flex-shrink-0 <%= 'bg-yellow-50 text-yellow-700 border-yellow-200' if alert.alert_type.match?(/ammonia/i) %> <%= 'bg-red-50 text-red-500 border-red-200' if alert.alert_type.match?(/temperature/i) %> <%= 'bg-green-50 text-green-600 border-green-200' if alert.alert_type.match?(/fan/i) %> <%= 'bg-blue-50 text-blue-600 border-blue-200' if alert.alert_type.match?(/humidity/i) %>">
+              <%= icon :bolt, class: "w-4 h-4" if alert.alert_type.match?(/ammonia/i) %>
+              <%= icon :thermometer, class: "w-4 h-4" if alert.alert_type.match?(/temperature/i) %>
+              <%= icon :fan, class: "w-4 h-4" if alert.alert_type.match?(/fan/i) %>
+              <%= icon :droplet, class: "w-4 h-4" if alert.alert_type.match?(/humidity/i) %>
+              <%= icon :exclamation_circle, class: "w-4 h-4" if !alert.alert_type.match?(/ammonia|temperature|fan|humidity/i) %>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="text-xs font-semibold text-gray-900"><%= alert.alert_type.humanize %></div>
+              <div class="text-[11px] text-gray-500">
+                <%= alert.farm.name %><%= alert.zone ? " · #{alert.zone.name}" : '' %>
+              </div>
+              <div class="text-[11px] text-gray-400 mt-0.5"><%= time_ago_in_words(alert.created_at) %> ago</div>
+            </div>
+            <div class="text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full border flex-shrink-0 self-start bg-red-50 text-red-600 border-red-200">
+              Critical
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @warnings.any? %>
+    <div>
+      <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wide mb-2">Warning</div>
+      <div class="space-y-2">
+        <% @warnings.each do |alert| %>
+          <div class="bg-white border border-gray-200 rounded p-3 flex items-start gap-3 shadow-sm hover:shadow-md hover:border-gray-300 transition-all border-l-3 border-l-yellow-500">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm border flex-shrink-0 <%= 'bg-yellow-50 text-yellow-700 border-yellow-200' if alert.alert_type.match?(/ammonia/i) %> <%= 'bg-red-50 text-red-500 border-red-200' if alert.alert_type.match?(/temperature/i) %> <%= 'bg-green-50 text-green-600 border-green-200' if alert.alert_type.match?(/fan/i) %> <%= 'bg-blue-50 text-blue-600 border-blue-200' if alert.alert_type.match?(/humidity/i) %>">
+              <%= icon :bolt, class: "w-4 h-4" if alert.alert_type.match?(/ammonia/i) %>
+              <%= icon :thermometer, class: "w-4 h-4" if alert.alert_type.match?(/temperature/i) %>
+              <%= icon :fan, class: "w-4 h-4" if alert.alert_type.match?(/fan/i) %>
+              <%= icon :droplet, class: "w-4 h-4" if alert.alert_type.match?(/humidity/i) %>
+              <%= icon :exclamation_circle, class: "w-4 h-4" if !alert.alert_type.match?(/ammonia|temperature|fan|humidity/i) %>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="text-xs font-semibold text-gray-900"><%= alert.alert_type.humanize %></div>
+              <div class="text-[11px] text-gray-500">
+                <%= alert.farm.name %><%= alert.zone ? " · #{alert.zone.name}" : '' %>
+              </div>
+              <div class="text-[11px] text-gray-400 mt-0.5"><%= time_ago_in_words(alert.created_at) %> ago</div>
+            </div>
+            <div class="text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full border flex-shrink-0 self-start bg-yellow-50 text-yellow-700 border-yellow-200">
+              Warning
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @resolved.any? %>
+    <div>
+      <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wide mb-2">Resolved Today</div>
+      <div class="space-y-2">
+        <% @resolved.each do |alert| %>
+          <div class="bg-white border border-gray-200 rounded p-3 flex items-start gap-3 shadow-sm opacity-70 border-l-3 border-l-green-500">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm border flex-shrink-0 bg-green-50 text-green-700 border-green-200">
+              <%= icon :check, class: "w-4 h-4" %>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="text-xs font-semibold text-gray-900"><%= alert.alert_type.humanize %></div>
+              <div class="text-[11px] text-gray-500">
+                <%= alert.farm.name %><%= alert.zone ? " · #{alert.zone.name}" : '' %>
+              </div>
+              <div class="text-[11px] text-gray-400 mt-0.5">
+                <%= time_ago_in_words(alert.created_at) %> ago · Resolved <%= time_ago_in_words(alert.resolved_at) %> ago
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if total_active == 0 && @resolved.none? %>
+    <div class="text-center py-10 text-gray-400">
+      <%= icon :bell, class: "w-8 h-8 mx-auto mb-2 opacity-40" %>
+      <div class="text-sm">No alerts to display</div>
+    </div>
+  <% end %>
+</div>

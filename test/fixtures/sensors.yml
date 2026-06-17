@@ -1,0 +1,15 @@
+gv_temp:
+  zone: gv_zone_c
+  sensor_type: temperature
+  label: Temp Sensor C
+  status: online
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.hour.ago %>
+
+gv_ammonia:
+  zone: gv_zone_c
+  sensor_type: ammonia
+  label: Ammonia Sensor C
+  status: online
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.hour.ago %>

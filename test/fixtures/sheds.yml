@@ -1,0 +1,11 @@
+gv_shed:
+  farm: green_valley
+  name: Shed 1
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.hour.ago %>
+
+sunrise_shed:
+  farm: sunrise
+  name: Shed 1
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.hour.ago %>

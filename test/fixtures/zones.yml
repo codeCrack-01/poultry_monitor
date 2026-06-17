@@ -1,0 +1,13 @@
+gv_zone_a:
+  shed: gv_shed
+  name: A
+  status: normal
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.hour.ago %>
+
+gv_zone_c:
+  shed: gv_shed
+  name: C
+  status: critical
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.hour.ago %>

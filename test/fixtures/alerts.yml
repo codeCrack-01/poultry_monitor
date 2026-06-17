@@ -1,0 +1,23 @@
+high_temp:
+  farm: green_valley
+  zone: gv_zone_c
+  sensor: gv_temp
+  alert_type: High Temperature
+  severity: critical
+  status: active
+  message: 34.2°C detected
+  value: 34.2
+  created_at: <%= 12.minutes.ago %>
+  updated_at: <%= 12.minutes.ago %>
+
+high_ammonia:
+  farm: green_valley
+  zone: gv_zone_c
+  sensor: gv_ammonia
+  alert_type: High Ammonia
+  severity: critical
+  status: active
+  message: 28 ppm detected
+  value: 28.0
+  created_at: <%= 15.minutes.ago %>
+  updated_at: <%= 15.minutes.ago %>
